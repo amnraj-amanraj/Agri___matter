@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
-import { fetchWeatherData } from '@/lib/weather';
+import { fetchWeatherForFarm } from '@/lib/weather-client';
 import { getFertilizerAdvice, evaluateSoilHealth } from '@/lib/advisory-engine';
 import { WeatherForecast } from '@/types';
 import { Card } from '@/components/ui/Card';
@@ -36,7 +36,8 @@ export default function DashboardPage() {
   useEffect(() => {
     async function loadData() {
       try {
-        const data = await fetchWeatherData(farm?.latitude || 30.9010, farm?.longitude || 75.8573);
+        const location = [user?.village, user?.district, user?.state].filter(Boolean).join(', ');
+        const data = await fetchWeatherForFarm(farm?.latitude || 30.9010, farm?.longitude || 75.8573, location);
         setWeather(data);
       } catch (err) {
         console.error("Dashboard weather fetch error", err);
@@ -45,7 +46,7 @@ export default function DashboardPage() {
       }
     }
     loadData();
-  }, [farm]);
+  }, [farm, user]);
 
   const fertilizerAdvice = getFertilizerAdvice(
     activeCrop?.crop_name || 'Wheat',
@@ -240,12 +241,14 @@ export default function DashboardPage() {
       <section className="space-y-3 pt-4">
         <h3 className="text-lg font-black text-agri-green-900">{t.common.quickActions}</h3>
         
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
           {[
             { href: '/weather', label: t.nav.weather, icon: CloudSun, color: 'bg-sky-500' },
             { href: '/crop-advisor', label: t.nav.cropAdvisor, icon: Leaf, color: 'bg-agri-green-700' },
             { href: '/soil-health', label: t.nav.soilHealth, icon: FlaskConical, color: 'bg-agri-brown-700' },
             { href: '/ai-assistant', label: t.nav.aiAssistant, icon: Bot, color: 'bg-agri-yellow-600' },
+            { href: '/farm-plan', label: language === 'hi' ? 'आज की योजना' : 'Today’s plan', icon: Sparkles, color: 'bg-indigo-600' },
+            { href: '/crop-doctor', label: language === 'hi' ? 'फसल जांच' : 'Crop check', icon: Leaf, color: 'bg-rose-600' },
           ].map((item, idx) => {
             const Icon = item.icon;
             return (

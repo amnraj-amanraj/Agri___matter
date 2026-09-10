@@ -9,7 +9,7 @@ import { useAuth } from '@/context/AuthContext';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { ProtectedLink } from '@/components/ProtectedLink';
 import { useTheme } from '@/context/ThemeContext';
-import { Sprout, Menu, X, CloudSun, Leaf, FlaskConical, Bot, User, ShieldAlert, Moon, Sun } from 'lucide-react';
+import { Sprout, Menu, X, CloudSun, Leaf, FlaskConical, Bot, User, ShieldAlert, Moon, Sun, CalendarDays, Stethoscope } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const { t } = useLanguage();
@@ -25,6 +25,8 @@ export const Navbar: React.FC = () => {
     { href: '/soil-health', label: t.nav.soilHealth, icon: FlaskConical },
     { href: '/fertilizer-guide', label: t.nav.fertilizerGuide, icon: Sprout },
     { href: '/ai-assistant', label: t.nav.aiAssistant, icon: Bot },
+    { href: '/farm-plan', label: 'Farm plan', icon: CalendarDays },
+    { href: '/crop-doctor', label: 'Crop check', icon: Stethoscope },
     { href: '/admin', label: t.nav.admin, icon: ShieldAlert },
   ];
 

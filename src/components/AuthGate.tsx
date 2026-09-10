@@ -16,7 +16,7 @@ export function AuthGate() {
 
   // Phone OTP state
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
-  const [phone, setPhone] = useState('9876543210');
+  const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
   const [timer, setTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
@@ -63,7 +63,6 @@ export function AuthGate() {
       setStep('otp');
       setTimer(30);
       setCanResend(false);
-      setOtp('123456');
       setStatusMsg({ type: 'success', text: res.message });
     } else {
       setStatusMsg({ type: 'error', text: res.message });
@@ -300,9 +299,11 @@ export function AuthGate() {
                     className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-base font-black tracking-widest text-center text-slate-900 dark:text-white"
                   />
                 </div>
-                <p className="text-[11px] text-slate-500 mt-1 italic">
-                  💡 Demo OTP Code: <strong className="text-emerald-600 dark:text-emerald-400">123456</strong>
-                </p>
+                {!process.env.NEXT_PUBLIC_SUPABASE_URL && (
+                  <p className="text-[11px] text-slate-500 mt-1 italic">
+                    Demo mode: enter any six-digit code. Configure Supabase SMS before production.
+                  </p>
+                )}
               </div>
 
               <div className="flex items-center justify-between text-xs pt-1">

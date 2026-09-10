@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
-import { fetchWeatherData } from '@/lib/weather';
+import { fetchWeatherForFarm } from '@/lib/weather-client';
 import { WeatherForecast } from '@/types';
 import { Card } from '@/components/ui/Card';
 import { Alert } from '@/components/ui/Alert';
@@ -12,14 +12,15 @@ import { CloudSun, Droplets, Wind, Thermometer, Calendar, ShieldAlert } from 'lu
 
 export default function WeatherPage() {
   const { t, language } = useLanguage();
-  const { farm } = useAuth();
+  const { farm, user } = useAuth();
   const [weather, setWeather] = useState<WeatherForecast | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
       try {
-        const data = await fetchWeatherData(farm?.latitude || 30.9010, farm?.longitude || 75.8573);
+        const location = [user?.village, user?.district, user?.state].filter(Boolean).join(', ');
+        const data = await fetchWeatherForFarm(farm?.latitude || 30.9010, farm?.longitude || 75.8573, location);
         setWeather(data);
       } catch (err) {
         console.error("Weather page error", err);
@@ -28,7 +29,7 @@ export default function WeatherPage() {
       }
     }
     load();
-  }, [farm]);
+  }, [farm, user]);
 
   if (loading) {
     return <LoadingSpinner label={t.common.loading} />;
