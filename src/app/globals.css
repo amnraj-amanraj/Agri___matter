@@ -5,6 +5,9 @@
 @layer base {
   body {
     @apply bg-emerald-50/40 text-gray-900 font-sans antialiased min-h-screen flex flex-col selection:bg-agri-green-200;
+    background-image:
+      radial-gradient(circle at top left, rgba(16, 185, 129, 0.14), transparent 32%),
+      radial-gradient(circle at bottom right, rgba(251, 191, 36, 0.12), transparent 24%);
   }
 
   html.dark body {

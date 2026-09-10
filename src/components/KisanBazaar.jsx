@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { useLanguage } from '../context/LanguageContext';
 import { initialMarketplaceListings } from '../data/marketplaceData';
 import confetti from 'canvas-confetti';
@@ -143,10 +144,12 @@ export const KisanBazaar = () => {
             <div>
               {/* Image & Badges */}
               <div className="relative h-48 w-full overflow-hidden bg-slate-100">
-                <img
+                <Image
                   src={item.image}
                   alt={item.cropName}
-                  className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                  width={400}
+                  height={192}
+                  className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                 />
                 {item.organicCertified && (
                   <span className="absolute top-3 left-3 bg-emerald-600/90 backdrop-blur text-white text-[11px] font-extrabold px-2.5 py-1 rounded-full shadow-sm flex items-center gap-1">
@@ -195,7 +198,7 @@ export const KisanBazaar = () => {
                 </div>
 
                 <p className="text-xs text-slate-600 line-clamp-2 italic bg-slate-50 p-2.5 rounded-lg">
-                  "{item.description}"
+                  {item.description}
                 </p>
               </div>
             </div>

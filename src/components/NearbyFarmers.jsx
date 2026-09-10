@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import Image from 'next/image';
 import { useLanguage } from '../context/LanguageContext';
 import { initialFarmersData } from '../data/nearbyFarmersData';
 import confetti from 'canvas-confetti';
@@ -338,10 +339,12 @@ export const NearbyFarmers = () => {
               <div className="p-5">
                 <div className="flex items-start justify-between gap-3 mb-4">
                   <div className="flex items-center gap-3">
-                    <img
+                    <Image
                       src={farmer.avatar}
                       alt={farmer.name}
-                      className="w-12 h-12 rounded-full object-cover border-2 border-emerald-500 shadow-sm"
+                      width={48}
+                      height={48}
+                      className="h-12 w-12 rounded-full border-2 border-emerald-500 object-cover shadow-sm"
                     />
                     <div>
                       <div className="flex items-center gap-1.5">
@@ -484,10 +487,12 @@ export const NearbyFarmers = () => {
             </button>
 
             <div className="flex items-center gap-4 mb-5">
-              <img
+              <Image
                 src={activeProfile.avatar}
                 alt={activeProfile.name}
-                className="w-16 h-16 rounded-full object-cover border-2 border-emerald-500 shadow-md"
+                width={64}
+                height={64}
+                className="h-16 w-16 rounded-full border-2 border-emerald-500 object-cover shadow-md"
               />
               <div>
                 <div className="flex items-center gap-2">

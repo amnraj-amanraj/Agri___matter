@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 import { PhoneCall, Shield, HelpCircle, Users, Sparkles } from 'lucide-react';
@@ -25,10 +26,12 @@ export const Footer: React.FC = () => {
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
               <div className="w-10 h-10 rounded-xl bg-white p-0.5 border border-emerald-400 overflow-hidden flex items-center justify-center">
-                <img 
-                  src="/agrimatter-logo.jpg" 
-                  alt="AgriMatter Logo" 
-                  className="w-full h-full object-contain"
+                <Image
+                  src="/agrimatter-logo.jpg"
+                  alt="AgriMatter Logo"
+                  width={40}
+                  height={40}
+                  className="h-full w-full object-contain"
                 />
               </div>
               <span className="text-xl font-black text-white tracking-tight">AgriMatter</span>
@@ -46,6 +49,7 @@ export const Footer: React.FC = () => {
             <h4 className="text-sm font-bold text-amber-300 uppercase tracking-wider mb-3">Quick Services</h4>
             <ul className="space-y-2 text-xs text-amber-100">
               <li><Link href="/weather" className="hover:text-white transition">Weather & Irrigation Advisories</Link></li>
+              <li><Link href="/mandi" className="hover:text-white transition">Official Mandi Prices</Link></li>
               <li><Link href="/crop-advisor" className="hover:text-white transition">Crop Suitability Calculator</Link></li>
               <li><Link href="/soil-health" className="hover:text-white transition">Soil pH & NPK Analysis</Link></li>
               <li><Link href="/fertilizer-guide" className="hover:text-white transition">Stage-Wise Fertilizer Guide</Link></li>
@@ -76,7 +80,7 @@ export const Footer: React.FC = () => {
           <div className="bg-agri-brown-800/80 p-4 rounded-xl border border-amber-500/20">
             <h4 className="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">Safety Disclaimer</h4>
             <p className="text-[11px] text-amber-100/90 leading-relaxed italic">
-              "{t.common.fertilizerDisclaimer}"
+              {t.common.fertilizerDisclaimer}
             </p>
           </div>
 

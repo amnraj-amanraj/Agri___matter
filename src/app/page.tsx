@@ -10,6 +10,7 @@ import { Alert } from '@/components/ui/Alert';
 
 import { ProtectedLink } from '@/components/ProtectedLink';
 import { FAQSection } from '@/components/FAQSection';
+import { StateFarmExplorer } from '@/components/StateFarmExplorer';
 import { 
   Sprout, 
   CloudSun, 
@@ -17,7 +18,8 @@ import {
   FlaskConical, 
   Bot, 
   ArrowRight, 
-  Award
+  Award,
+  Store
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -108,6 +110,13 @@ export default function LandingPage() {
       badge: "Open-Meteo API"
     },
     {
+      icon: Store,
+      title: t.nav.mandi,
+      desc: language === 'hi' ? 'राज्य, जिला और फसल चुनकर आधिकारिक मंडी भाव देखें।' : 'Check official market prices by state, district, and crop.',
+      href: "/mandi",
+      badge: "Agmarknet API"
+    },
+    {
       icon: Leaf,
       title: t.features.cropTitle,
       desc: t.features.cropDesc,
@@ -140,26 +149,28 @@ export default function LandingPage() {
   return (
     <div ref={pageRef} className="space-y-16 py-4">
       {/* Hero Section */}
-      <section data-gsap="hero" className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-agri-green-900 via-agri-green-800 to-agri-brown-900 text-white p-6 sm:p-12 shadow-xl border border-emerald-700">
+      <section data-gsap="hero" className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-agri-green-900 via-agri-green-800 to-agri-brown-900 text-white p-6 sm:p-10 lg:p-12 shadow-2xl border border-emerald-700/80">
         <div data-gsap="hero-sweep" className="pointer-events-none absolute -left-1/3 top-0 h-full w-1/4 -skew-x-12 bg-white/10 blur-2xl" />
-        <div className="relative z-10 max-w-3xl space-y-6">
-          
-          <div data-gsap="hero-item" className="inline-flex items-center space-x-2 bg-emerald-800/80 px-3.5 py-1.5 rounded-full border border-emerald-500/30 text-xs font-bold text-emerald-200">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(251,191,36,0.18),transparent_20%),radial-gradient(circle_at_bottom_left,_rgba(16,185,129,0.22),transparent_28%)]" />
+        <div className="relative z-10 max-w-4xl space-y-6">
+          <div data-gsap="hero-item" className="inline-flex items-center space-x-2 bg-emerald-800/80 px-3.5 py-1.5 rounded-full border border-emerald-500/30 text-xs font-bold text-emerald-200 shadow-inner shadow-emerald-950/20">
             <Award className="w-4 h-4 text-amber-400" />
             <span>Kisan Support System for Indian Farmers</span>
           </div>
 
-          <h1 data-gsap="hero-item" className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
-            {t.hero.title}
-          </h1>
+          <div className="space-y-4">
+            <h1 data-gsap="hero-item" className="text-3xl sm:text-5xl font-black tracking-tight leading-tight max-w-2xl">
+              {t.hero.title}
+            </h1>
 
-          <p data-gsap="hero-item" className="text-base sm:text-xl text-emerald-100/90 font-medium leading-relaxed">
-            {t.hero.subtitle}
-          </p>
+            <p data-gsap="hero-item" className="max-w-2xl text-base sm:text-xl text-emerald-100/90 font-medium leading-relaxed">
+              {t.hero.subtitle}
+            </p>
+          </div>
 
-          <div data-gsap="hero-item" className="p-4 rounded-2xl bg-white/10 backdrop-blur border border-white/20">
+          <div data-gsap="hero-item" className="p-4 rounded-2xl bg-white/10 backdrop-blur border border-white/20 shadow-lg shadow-emerald-950/20">
             <p className="text-sm font-bold text-amber-300">
-              "{t.hero.farmerGreeting} - {language === 'hi' ? 'आज का अलर्ट: कल बारिश की संभावना है। आज छिड़काव (spraying) से बचें।' : 'Today Alert: Rain expected tomorrow. Avoid spraying today.'}"
+              {t.hero.farmerGreeting} - {language === 'hi' ? 'आज का अलर्ट: कल बारिश की संभावना है। आज छिड़काव (spraying) से बचें।' : 'Today Alert: Rain expected tomorrow. Avoid spraying today.'}
             </p>
           </div>
 
@@ -176,7 +187,21 @@ export default function LandingPage() {
               </Button>
             </Link>
           </div>
+        </div>
 
+        <div className="relative z-10 mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-2xl">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-3 backdrop-blur-sm">
+            <div className="text-2xl font-black text-white">24/7</div>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-emerald-200">Advisory</div>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-3 backdrop-blur-sm">
+            <div className="text-2xl font-black text-white">18+</div>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-emerald-200">Crops</div>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-3 backdrop-blur-sm">
+            <div className="text-2xl font-black text-white">AI</div>
+            <div className="text-[10px] uppercase tracking-[0.2em] text-emerald-200">Assistant</div>
+          </div>
         </div>
       </section>
 
@@ -203,26 +228,26 @@ export default function LandingPage() {
             const Icon = f.icon;
             return (
               <div key={i} data-gsap="feature-card">
-                <Card className="hover:border-agri-green-600 transition group relative flex flex-col justify-between">
+                <Card className="group relative flex h-full flex-col justify-between overflow-hidden border-emerald-100 bg-gradient-to-br from-white to-emerald-50/60 transition-all duration-200 hover:border-emerald-300 hover:shadow-xl">
                   <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div data-gsap="feature-icon" className="w-12 h-12 rounded-2xl bg-agri-green-100 flex items-center justify-center text-agri-green-800 font-bold">
-                      <Icon className="w-6 h-6" />
+                    <div className="flex items-center justify-between">
+                      <div data-gsap="feature-icon" className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-agri-green-100 to-emerald-200 text-agri-green-800 shadow-inner shadow-emerald-200/60">
+                        <Icon className="h-6 w-6" />
+                      </div>
+                      <span className="rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.15em] text-amber-900">
+                        {f.badge}
+                      </span>
                     </div>
-                    <span className="text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full bg-amber-100 text-amber-900">
-                      {f.badge}
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-black text-agri-green-900 mb-1">{f.title}</h3>
-                    <p className="text-xs text-gray-600 leading-relaxed">{f.desc}</p>
-                  </div>
+                    <div>
+                      <h3 className="mb-1 text-lg font-black text-agri-green-900">{f.title}</h3>
+                      <p className="text-xs leading-relaxed text-gray-600">{f.desc}</p>
+                    </div>
                   </div>
 
-                  <div className="pt-4 mt-4 border-t border-gray-100">
-                    <ProtectedLink href={f.href} className="inline-flex items-center text-xs font-extrabold text-agri-green-700 hover:text-agri-green-900">
+                  <div className="mt-5 border-t border-gray-100 pt-4">
+                    <ProtectedLink href={f.href} className="inline-flex items-center text-xs font-extrabold text-agri-green-700 transition hover:text-agri-green-900">
                       <span>{t.common.viewDetails}</span>
-                      <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                      <ArrowRight className="ml-1 h-3.5 w-3.5" />
                     </ProtectedLink>
                   </div>
                 </Card>
@@ -258,6 +283,8 @@ export default function LandingPage() {
           ))}
         </div>
       </section>
+
+      <StateFarmExplorer language={language} />
 
       <FAQSection initialLanguage={language} />
 

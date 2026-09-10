@@ -178,7 +178,7 @@ export const VoiceAssistant = ({ isOpen, onClose, setActiveTab }) => {
                 <span className="text-slate-400 font-extrabold block text-[10px] uppercase tracking-wider mb-1">
                   You Said:
                 </span>
-                <p className="font-semibold text-slate-800 italic">"{transcript}"</p>
+                <p className="font-semibold text-slate-800 italic">{transcript}</p>
               </div>
             )}
             {aiReply && (
@@ -210,7 +210,7 @@ export const VoiceAssistant = ({ isOpen, onClose, setActiveTab }) => {
                 className="w-full text-left p-3 rounded-xl border border-slate-200 hover:border-amber-400 hover:bg-amber-50/70 hover:-translate-y-0.5 text-xs text-slate-700 font-semibold transition-all flex items-center justify-between group"
               >
                 <span className="group-hover:text-amber-900 truncate">
-                  "{lang === 'hi' ? q.textHi : q.textEn}"
+                  {lang === 'hi' ? q.textHi : q.textEn}
                 </span>
                 <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0 ml-2 opacity-60 group-hover:opacity-100" />
               </button>

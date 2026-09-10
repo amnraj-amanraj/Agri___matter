@@ -9,7 +9,7 @@ import { useAuth } from '@/context/AuthContext';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { ProtectedLink } from '@/components/ProtectedLink';
 import { useTheme } from '@/context/ThemeContext';
-import { Sprout, Menu, X, CloudSun, Leaf, FlaskConical, Bot, User, ShieldAlert, Moon, Sun, CalendarDays, Stethoscope } from 'lucide-react';
+import { Sprout, Menu, X, CloudSun, Leaf, FlaskConical, Bot, User, ShieldAlert, Moon, Sun, CalendarDays, Stethoscope, Store } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const { t } = useLanguage();
@@ -21,6 +21,7 @@ export const Navbar: React.FC = () => {
   const navLinks = [
     { href: '/dashboard', label: t.nav.dashboard, icon: Sprout },
     { href: '/weather', label: t.nav.weather, icon: CloudSun },
+    { href: '/mandi', label: t.nav.mandi, icon: Store },
     { href: '/crop-advisor', label: t.nav.cropAdvisor, icon: Leaf },
     { href: '/soil-health', label: t.nav.soilHealth, icon: FlaskConical },
     { href: '/fertilizer-guide', label: t.nav.fertilizerGuide, icon: Sprout },
@@ -38,10 +39,12 @@ export const Navbar: React.FC = () => {
           {/* Brand Logo with Official AgriMatter Logo Image */}
           <Link href="/" className="flex items-center space-x-2 py-1">
             <div className="relative w-10 h-10 overflow-hidden rounded-xl bg-white border border-emerald-200 shadow-sm flex items-center justify-center p-0.5">
-              <img 
-                src="/agrimatter-logo.jpg" 
-                alt="AgriMatter Logo" 
-                className="w-full h-full object-contain"
+              <Image
+                src="/agrimatter-logo.jpg"
+                alt="AgriMatter Logo"
+                width={40}
+                height={40}
+                className="h-full w-full object-contain"
               />
             </div>
             <div>

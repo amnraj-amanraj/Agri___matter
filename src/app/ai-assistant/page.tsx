@@ -176,7 +176,7 @@ export default function AIAssistantPage() {
               onClick={() => handleSend(sq)}
               className="text-xs font-bold text-agri-green-900 bg-emerald-100/70 hover:bg-agri-green-700 hover:text-white px-3 py-1.5 rounded-full transition border border-emerald-200 text-left"
             >
-              "{sq}"
+              {sq}
             </button>
           ))}
         </div>

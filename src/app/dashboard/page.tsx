@@ -87,7 +87,7 @@ export default function DashboardPage() {
       {/* Weather Alert Banner */}
       <Alert type="warning" title={t.dashboard.weatherAlertHeader}>
         <p className="font-bold text-sm text-amber-950">
-          "{weather?.farmingAdvice[language] || t.dashboard.sprayingAdvice}"
+          {weather?.farmingAdvice[language] || t.dashboard.sprayingAdvice}
         </p>
       </Alert>
 
@@ -197,7 +197,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="text-[11px] text-amber-900 font-semibold bg-amber-100/60 p-2 rounded-lg italic">
-            "{t.common.fertilizerDisclaimer}"
+            {t.common.fertilizerDisclaimer}
           </div>
 
           <Link href="/fertilizer-guide" className="block pt-1">

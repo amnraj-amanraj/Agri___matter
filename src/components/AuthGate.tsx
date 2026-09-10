@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { X, Phone, Mail, Lock, KeyRound, ArrowRight, ShieldCheck, RefreshCw, UserCheck, UserPlus } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -137,7 +138,7 @@ export function AuthGate() {
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center space-x-3">
             <div className="relative w-10 h-10 overflow-hidden rounded-xl bg-white border border-emerald-300 shadow-sm flex items-center justify-center p-0.5">
-              <img src="/agrimatter-logo.jpg" alt="AgriMatter" className="w-full h-full object-contain" />
+              <Image src="/agrimatter-logo.jpg" alt="AgriMatter" width={40} height={40} className="h-full w-full object-contain" />
             </div>
             <div>
               <h2 id="auth-gate-title" className="text-lg font-black text-slate-900 dark:text-white leading-tight">

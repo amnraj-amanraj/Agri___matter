@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import Image from 'next/image';
 import { useLanguage } from '../context/LanguageContext.jsx';
 import { useAuth } from '../context/AuthContext';
 import { cropDiseasesDatabase } from '../data/diseasesData';
@@ -193,7 +194,7 @@ export const CropDoctor = () => {
             )}
             {selectedImage && !analyzing && (
               <div className="mt-5 flex items-center gap-3 text-left bg-slate-50 rounded-2xl border border-slate-200 p-3">
-                    <img src={selectedImage} onError={handleImageError} alt="Selected leaf" className="w-14 h-14 object-cover rounded-xl border border-emerald-200" />
+                    <Image src={selectedImage} onError={handleImageError} alt="Selected leaf" width={56} height={56} className="h-14 w-14 rounded-xl border border-emerald-200 object-cover" />
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-bold text-slate-800 truncate">{lang === 'hi' ? 'फोटो तैयार है' : 'Photo ready for review'}</p>
                   <p className="text-[11px] text-emerald-700 font-semibold">{lang === 'hi' ? 'AI रिपोर्ट नीचे उपलब्ध है' : 'AI report is ready below'}</p>
@@ -223,11 +224,13 @@ export const CropDoctor = () => {
                   onClick={() => isLoggedIn ? runDiagnosis(item) : openAuthModal()}
                   className="group flex flex-col items-start p-2.5 rounded-2xl border border-slate-200 hover:border-emerald-400 hover:bg-emerald-50/50 transition text-left"
                 >
-                  <img
+                  <Image
                     src={item.sampleImage}
                     onError={handleImageError}
                     alt={item.diseaseNameEn}
-                    className="w-full h-24 object-cover rounded-xl mb-2 group-hover:scale-102 transition"
+                    width={300}
+                    height={96}
+                    className="mb-2 h-24 w-full rounded-xl object-cover transition group-hover:scale-102"
                   />
                   <span className="font-bold text-xs text-slate-900 group-hover:text-emerald-700 line-clamp-1">
                     {lang === 'hi' ? item.diseaseNameHi : item.diseaseNameEn}
@@ -262,11 +265,13 @@ export const CropDoctor = () => {
               <div className="flex flex-wrap items-start justify-between gap-4 pb-6 border-b border-slate-100">
                 <div className="flex items-center gap-4">
                   {selectedImage && (
-                    <img
+                    <Image
                       src={selectedImage}
                       onError={handleImageError}
                       alt="Scanned leaf"
-                      className="w-20 h-20 rounded-2xl object-cover border-2 border-emerald-500 shadow-sm"
+                      width={80}
+                      height={80}
+                      className="h-20 w-20 rounded-2xl border-2 border-emerald-500 object-cover shadow-sm"
                     />
                   )}
                   <div>

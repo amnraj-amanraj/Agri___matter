@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
@@ -107,11 +108,13 @@ export default function LoginPage() {
       
       {/* Header with Official Logo */}
       <div className="text-center space-y-2">
-        <div className="w-16 h-16 rounded-2xl bg-white p-1 border border-emerald-300 mx-auto shadow-md flex items-center justify-center">
-          <img 
-            src="/agrimatter-logo.jpg" 
-            alt="AgriMatter Logo" 
-            className="w-full h-full object-contain"
+        <div className="w-16 h-16 rounded-2xl bg-white p-1 border border-emerald-300 mx-auto shadow-md flex items-center justify-center overflow-hidden">
+          <Image
+            src="/agrimatter-logo.jpg"
+            alt="AgriMatter Logo"
+            width={64}
+            height={64}
+            className="h-full w-full object-contain"
           />
         </div>
         <h1 className="text-2xl font-black text-agri-green-900">

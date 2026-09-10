@@ -42,7 +42,7 @@ export default function FertilizerGuidePage() {
       {/* Mandatory Safety Disclaimer Banner */}
       <Alert type="warning" title={t.common.disclaimerTitle}>
         <p className="text-sm font-black text-amber-950">
-          "{t.common.fertilizerDisclaimer}"
+          {t.common.fertilizerDisclaimer}
         </p>
       </Alert>
 
