@@ -31,6 +31,21 @@
 8. **Admin Portal**:
    - Control master crop records, advisory rules, and system statistics.
 
+9. **Farmer FAQ Search**:
+   - Search questions across English, Hindi, answers, categories, and keywords.
+   - Filter by practical topics such as soil, irrigation, pests, weather, schemes, markets, and livestock.
+
+10. **State-Wise Agriculture Explorer**:
+   - Browse state-wise produce using circular image cards and a numbered visual board.
+   - View available income, land-holding, operational-holding, crop, and regional data.
+   - Includes bilingual deep-profile fields and visible source/review status.
+
+11. **Mandi Price Checker**:
+   - Available at `/mandi` with state, district, and commodity filters.
+   - Uses the official data.gov.in Agmarknet resource when server credentials are configured.
+   - Displays min, modal, and max prices, market, variety, date, source, and cache status.
+   - Never displays invented prices when the official API is unavailable.
+
 ---
 
 ## 🛠 Tech Stack
@@ -41,6 +56,91 @@
 - **Icons**: Lucide React
 - **Backend**: Next.js API Routes (`/api/weather`, `/api/crop-recommendations`, `/api/soil-advice`, `/api/fertilizer-advice`, `/api/assistant`)
 - **Database & Auth**: Supabase PostgreSQL with Row Level Security (RLS) policies
+
+The active application is the Next.js App Router under `src/app`. The repository also contains an older Vite-style entry point (`src/App.jsx` and `src/main.jsx`) kept for legacy reference; `npm run dev` runs Next.js, not that legacy entry point.
+
+## 📁 Project Guide
+
+| Location | Purpose |
+| --- | --- |
+| `src/app/` | Next.js pages, layouts, and server API routes |
+| `src/app/api/` | Server-side route handlers for weather, advice, AI, and Mandi data |
+| `src/components/` | Reusable UI, navigation, FAQ, state explorer, and farmer tools |
+| `src/context/` | Authentication, language, and theme providers |
+| `src/data/` | Crop, FAQ, state, and reference datasets |
+| `src/lib/` | API clients, advisory logic, translations, and data normalization |
+| `src/types/` | Shared TypeScript types |
+| `supabase/schema.sql` | Supabase tables, RLS policies, and seed crop data |
+| `tailwind.config.js` | Tailwind content paths and AgriMatter color tokens |
+| `src/app/globals.css` | Global Tailwind layers, theme overrides, and visual polish |
+
+## 🧭 Main Routes
+
+| Route | Use |
+| --- | --- |
+| `/` | Landing page, state-wise agriculture explorer, and farmer FAQs |
+| `/dashboard` | Farmer overview and quick actions |
+| `/mandi` | Official mandi price search |
+| `/weather` | Forecast and farming advisory |
+| `/crop-advisor` | Crop suitability matching |
+| `/soil-health` | Soil pH and NPK evaluation |
+| `/fertilizer-guide` | Stage-wise fertilizer guidance |
+| `/crop-doctor` | Crop issue and disease help |
+| `/ai-assistant` | AI text and voice assistant |
+| `/farm-plan` | Farm planning workflow |
+| `/profile` | Farmer profile |
+
+## 🔐 Environment Variables
+
+Copy `.env.example` to `.env.local` and keep all real credentials server-side. Never commit `.env.local` or use `NEXT_PUBLIC_` for private API keys.
+
+```env
+# Required only for live Mandi prices
+DATA_GOV_API_KEY=your_data_gov_in_api_key
+DATA_GOV_MANDI_RESOURCE_ID=your_agmarknet_resource_id
+
+# Optional integrations used by other features
+GEMINI_API_KEY=your_gemini_key
+MONGODB_URI=your_mongodb_connection_string
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+Without the data.gov.in values, `/api/mandi` returns a clear configuration response and the UI does not show fake market prices.
+
+## ✅ Data Accuracy Policy
+
+- Live market prices must come from official data.gov.in/Agmarknet data.
+- Weather is fetched through the configured weather service and should be checked against local conditions.
+- State income and holding figures currently use the supplied NSS Report No. 587 and Agriculture Census 2015-16 snapshots.
+- State deep-profile fields that are not independently verified are labelled in the UI instead of being presented as facts.
+- Scheme eligibility, prices, rainfall, groundwater status, and deadlines are time-sensitive. Confirm them with the relevant official department before acting.
+
+## 🛠 Useful Commands
+
+```bash
+npm run dev       # Start the Next.js development server
+npm run lint      # Run Next.js ESLint checks
+npm run build     # Create and validate a production build
+npm run start     # Serve the production build
+```
+
+If port `3000` is occupied, use another port:
+
+```bash
+npm run dev -- -p 3001
+```
+
+If CSS or generated chunks return `404` during development, stop duplicate Next.js processes, remove `.next`, and restart one server:
+
+```powershell
+Remove-Item .next -Recurse -Force
+npm run dev
+```
+
+## 🤝 Contributing
+
+Keep farmer-facing text in `src/lib/translations.ts`, prefer server-side API calls for private credentials, preserve the Hindi experience, and add source notes whenever introducing government or agricultural data. Run `npm run lint` and `npm run build` before submitting changes.
 
 ---
 
