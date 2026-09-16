@@ -8,11 +8,11 @@ import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Alert } from '@/components/ui/Alert';
-import { Phone, Mail, User, Lock, KeyRound, Sprout, ArrowRight, ShieldCheck, RefreshCw, Database } from 'lucide-react';
+import { Phone, Mail, User, Lock, KeyRound, Sprout, ArrowRight, ShieldCheck, RefreshCw } from 'lucide-react';
 
 export default function SignupPage() {
   const { t, language } = useLanguage();
-  const { sendOtp, verifyOtp, signUpWithEmail, isSupabaseLive } = useAuth();
+  const { sendOtp, verifyOtp, signUpWithEmail } = useAuth();
   const router = useRouter();
 
   const [authTab, setAuthTab] = useState<'phone' | 'email'>('phone');
@@ -128,23 +128,11 @@ export default function SignupPage() {
           <Sprout className="w-7 h-7" />
         </div>
         <h1 className="text-2xl font-black text-agri-green-900">
-          {language === 'hi' ? 'नया किसान खाता बनाएं' : 'Farmer Supabase Registration'}
+          {language === 'hi' ? 'नया किसान खाता बनाएं' : 'Farmer Registration'}
         </h1>
         <p className="text-xs text-gray-600 font-semibold">
-          {language === 'hi' ? 'मोबाइल नंबर ओटीपी या ईमेल द्वारा रजिस्ट्रेशन करें' : 'Create your farmer profile via Mobile OTP or Supabase Email Auth'}
+          {language === 'hi' ? 'मोबाइल नंबर ओटीपी या ईमेल द्वारा रजिस्ट्रेशन करें' : 'Create your farmer profile via Mobile OTP or Email'}
         </p>
-
-        {isSupabaseLive ? (
-          <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-bold border border-emerald-300">
-            <Database className="w-3.5 h-3.5 text-emerald-700" />
-            <span>Supabase Database Connected</span>
-          </div>
-        ) : (
-          <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold border border-amber-300">
-            <Database className="w-3.5 h-3.5 text-amber-700" />
-            <span>Local Auth / Supabase Ready</span>
-          </div>
-        )}
       </div>
 
       <Card className="shadow-lg border-emerald-200">
@@ -343,7 +331,7 @@ export default function SignupPage() {
 
             <Button type="submit" size="lg" fullWidth disabled={loading}>
               <ShieldCheck className="w-5 h-5 mr-2" />
-              <span>{loading ? 'Creating Account...' : 'Register with Supabase Auth'}</span>
+              <span>{loading ? 'Creating Account...' : 'Register Locally'}</span>
             </Button>
           </form>
         )}

@@ -300,11 +300,9 @@ export function AuthGate() {
                     className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-base font-black tracking-widest text-center text-slate-900 dark:text-white"
                   />
                 </div>
-                {!process.env.NEXT_PUBLIC_SUPABASE_URL && (
-                  <p className="text-[11px] text-slate-500 mt-1 italic">
-                    Demo mode: enter any six-digit code. Configure Supabase SMS before production.
-                  </p>
-                )}
+                <p className="text-[11px] text-slate-500 mt-1 italic">
+                  Demo mode: enter any six-digit code.
+                </p>
               </div>
 
               <div className="flex items-center justify-between text-xs pt-1">

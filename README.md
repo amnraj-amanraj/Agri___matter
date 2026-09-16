@@ -55,7 +55,7 @@
 - **Styling**: Tailwind CSS with custom agricultural palette (Green, Soil Brown, Harvest Yellow, Sky Blue)
 - **Icons**: Lucide React
 - **Backend**: Next.js API Routes (`/api/weather`, `/api/crop-recommendations`, `/api/soil-advice`, `/api/fertilizer-advice`, `/api/assistant`)
-- **Database & Auth**: Supabase PostgreSQL with Row Level Security (RLS) policies
+- **Auth & profile storage**: Local browser storage for a standalone demo experience
 
 The active application is the Next.js App Router under `src/app`. The repository also contains an older Vite-style entry point (`src/App.jsx` and `src/main.jsx`) kept for legacy reference; `npm run dev` runs Next.js, not that legacy entry point.
 
@@ -70,7 +70,6 @@ The active application is the Next.js App Router under `src/app`. The repository
 | `src/data/` | Crop, FAQ, state, and reference datasets |
 | `src/lib/` | API clients, advisory logic, translations, and data normalization |
 | `src/types/` | Shared TypeScript types |
-| `supabase/schema.sql` | Supabase tables, RLS policies, and seed crop data |
 | `tailwind.config.js` | Tailwind content paths and AgriMatter color tokens |
 | `src/app/globals.css` | Global Tailwind layers, theme overrides, and visual polish |
 
@@ -99,11 +98,8 @@ Copy `.env.example` to `.env.local` and keep all real credentials server-side. N
 DATA_GOV_API_KEY=your_data_gov_in_api_key
 DATA_GOV_MANDI_RESOURCE_ID=your_agmarknet_resource_id
 
-# Optional integrations used by other features
+# Optional AI integration
 GEMINI_API_KEY=your_gemini_key
-MONGODB_URI=your_mongodb_connection_string
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 Without the data.gov.in values, `/api/mandi` returns a clear configuration response and the UI does not show fake market prices.
@@ -144,16 +140,6 @@ Keep farmer-facing text in `src/lib/translations.ts`, prefer server-side API cal
 
 ---
 
-## 🗄 Database Schema (Supabase PostgreSQL)
-
-The complete SQL schema with Row Level Security (RLS) policies and seed data is located at `supabase/schema.sql`.
-
-### Tables Created:
-- `profiles`: `id`, `full_name`, `phone`, `language`, `state`, `district`, `village`, `created_at`
-- `farms`: `id`, `user_id`, `land_size`, `irrigation_type`, `latitude`, `longitude`, `soil_type`
-- `crops`: `id`, `name`, `season`, `suitable_soils`, `irrigation_need`, `sowing_months`, `description`
-- `farmer_crops`: `id`, `farm_id`, `crop_id`, `crop_stage`, `sowing_date`
-- `soil_reports`: `id`, `farm_id`, `ph`, `nitrogen`, `phosphorus`, `potassium`, `report_date`
 - `crop_advisories`: `id`, `crop_id`, `crop_stage`, `weather_condition`, `advice_english`, `advice_hindi`
 - `weather_alerts`: `id`, `farm_id`, `alert_type`, `alert_date`, `message`
 - `assistant_conversations`: `id`, `user_id`, `question`, `answer`, `language`, `created_at`

@@ -78,12 +78,24 @@ export interface WeatherForecast {
     tempMax: number;
     tempMin: number;
     precipitationProb: number;
+    precipitation: number;
+    sunrise: string;
+    sunset: string;
+    windSpeed: number;
+    evapotranspiration: number;
     condition: string;
   }>;
   hourly: Array<{
     time: string;
     temp: number;
     precipitationProb: number;
+    precipitation: number;
+    humidity: number;
+    windSpeed: number;
+    evapotranspiration: number;
+    soilTemperature: number;
+    soilMoisture: number;
+    conditionCode: number;
   }>;
   farmingAdvice: {
     en: string;

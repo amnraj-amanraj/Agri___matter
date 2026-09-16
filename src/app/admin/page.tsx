@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
-import { MOCK_CROPS } from '@/lib/supabase';
+import { MOCK_CROPS } from '@/lib/mock-data';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { ShieldAlert, Plus, Edit, Trash2, Sprout, CloudSun, Database } from 'lucide-react';
+import { ShieldAlert, Plus, Edit, Trash2, Sprout, CloudSun, HardDrive } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   const { t, language } = useLanguage();
@@ -76,11 +76,11 @@ export default function AdminDashboardPage() {
 
         <Card className="flex items-center space-x-4 bg-amber-50 border-amber-200">
           <div className="w-12 h-12 rounded-2xl bg-amber-600 text-white flex items-center justify-center font-bold">
-            <Database className="w-6 h-6" />
+            <HardDrive className="w-6 h-6" />
           </div>
           <div>
             <span className="text-2xl font-black text-amber-900">RLS Active</span>
-            <span className="text-xs font-bold text-gray-600 block">Supabase PostgreSQL</span>
+            <span className="text-xs font-bold text-gray-600 block">Local browser storage</span>
           </div>
         </Card>
       </div>

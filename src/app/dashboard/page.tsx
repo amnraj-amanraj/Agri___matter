@@ -37,7 +37,7 @@ export default function DashboardPage() {
     async function loadData() {
       try {
         const location = [user?.village, user?.district, user?.state].filter(Boolean).join(', ');
-        const data = await fetchWeatherForFarm(farm?.latitude || 30.9010, farm?.longitude || 75.8573, location);
+        const data = await fetchWeatherForFarm(farm?.latitude || 29.34, farm?.longitude || 79.56, location);
         setWeather(data);
       } catch (err) {
         console.error("Dashboard weather fetch error", err);

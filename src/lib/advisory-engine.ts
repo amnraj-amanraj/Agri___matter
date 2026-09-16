@@ -4,7 +4,7 @@ import {
   SoilAdviceResult, 
   FertilizerAdvice 
 } from '@/types';
-import { MOCK_CROPS } from './supabase';
+import { MOCK_CROPS } from './mock-data';
 
 const GENERAL_DISCLAIMER = {
   en: "This is general guidance. For exact fertilizer doses, consult a soil test report or local agriculture officer.",

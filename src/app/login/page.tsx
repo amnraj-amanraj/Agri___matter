@@ -9,11 +9,11 @@ import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Alert } from '@/components/ui/Alert';
-import { Phone, Mail, Lock, KeyRound, ArrowRight, ShieldCheck, RefreshCw, Database } from 'lucide-react';
+import { Phone, Mail, Lock, KeyRound, ArrowRight, ShieldCheck, RefreshCw } from 'lucide-react';
 
 export default function LoginPage() {
   const { t, language } = useLanguage();
-  const { sendOtp, verifyOtp, loginWithEmail, isSupabaseLive } = useAuth();
+  const { sendOtp, verifyOtp, loginWithEmail } = useAuth();
   const router = useRouter();
 
   const [authTab, setAuthTab] = useState<'phone' | 'email'>('phone');
@@ -121,20 +121,8 @@ export default function LoginPage() {
           {language === 'hi' ? 'किसान खाता लॉग इन' : 'Farmer Auth Login'}
         </h1>
         <p className="text-xs text-gray-600 font-semibold">
-          {language === 'hi' ? 'मोबाइल नंबर ओटीपी या ईमेल द्वारा लॉग इन करें' : 'Authenticate via Mobile Phone OTP or Supabase Email & Password'}
+          {language === 'hi' ? 'मोबाइल नंबर ओटीपी या ईमेल द्वारा लॉग इन करें' : 'Authenticate via Mobile Phone OTP or Email & Password'}
         </p>
-
-        {isSupabaseLive ? (
-          <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-bold border border-emerald-300">
-            <Database className="w-3.5 h-3.5 text-emerald-700" />
-            <span>Supabase Live Auth Connected</span>
-          </div>
-        ) : (
-          <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold border border-amber-300">
-            <Database className="w-3.5 h-3.5 text-amber-700" />
-            <span>Local Auth / Supabase Ready</span>
-          </div>
-        )}
       </div>
 
       <Card className="shadow-lg border-emerald-200">
@@ -159,7 +147,7 @@ export default function LoginPage() {
             }`}
           >
             <Mail className="w-4 h-4" />
-            <span>Supabase Email</span>
+            <span>Email</span>
           </button>
         </div>
         
@@ -262,7 +250,7 @@ export default function LoginPage() {
           <form onSubmit={handleEmailLogin} className="space-y-4">
             <div>
               <label className="block text-xs font-extrabold text-agri-green-900 mb-1">
-                {language === 'hi' ? 'ईमेल पता' : 'Supabase Registered Email'}
+                  {language === 'hi' ? 'ईमेल पता' : 'Email Address'}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
@@ -299,7 +287,7 @@ export default function LoginPage() {
 
             <Button type="submit" size="lg" fullWidth disabled={loading}>
               <ShieldCheck className="w-5 h-5 mr-2" />
-              <span>{loading ? 'Authenticating...' : 'Sign In with Supabase'}</span>
+              <span>{loading ? 'Authenticating...' : 'Sign In with Email'}</span>
             </Button>
           </form>
         )}

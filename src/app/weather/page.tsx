@@ -20,7 +20,7 @@ export default function WeatherPage() {
     async function load() {
       try {
         const location = [user?.village, user?.district, user?.state].filter(Boolean).join(', ');
-        const data = await fetchWeatherForFarm(farm?.latitude || 30.9010, farm?.longitude || 75.8573, location);
+        const data = await fetchWeatherForFarm(farm?.latitude || 29.34, farm?.longitude || 79.56, location);
         setWeather(data);
       } catch (err) {
         console.error("Weather page error", err);
@@ -90,6 +90,32 @@ export default function WeatherPage() {
         </div>
       </Card>
 
+      {/* Field conditions from the live hourly forecast */}
+      {weather?.hourly[0] && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <Card className="p-3 border-sky-100">
+            <p className="text-[10px] font-bold uppercase text-gray-500">Rainfall</p>
+            <p className="text-lg font-black text-sky-700">{weather.hourly[0].precipitation} mm</p>
+            <p className="text-[10px] text-gray-500">next forecast hour</p>
+          </Card>
+          <Card className="p-3 border-emerald-100">
+            <p className="text-[10px] font-bold uppercase text-gray-500">Soil moisture</p>
+            <p className="text-lg font-black text-agri-green-800">{Math.round(weather.hourly[0].soilMoisture * 100)}%</p>
+            <p className="text-[10px] text-gray-500">top 0-9 cm average</p>
+          </Card>
+          <Card className="p-3 border-amber-100">
+            <p className="text-[10px] font-bold uppercase text-gray-500">Soil temperature</p>
+            <p className="text-lg font-black text-amber-700">{weather.hourly[0].soilTemperature}°C</p>
+            <p className="text-[10px] text-gray-500">surface soil</p>
+          </Card>
+          <Card className="p-3 border-orange-100">
+            <p className="text-[10px] font-bold uppercase text-gray-500">Evapotranspiration</p>
+            <p className="text-lg font-black text-orange-700">{weather.hourly[0].evapotranspiration} mm</p>
+            <p className="text-[10px] text-gray-500">next forecast hour</p>
+          </Card>
+        </div>
+      )}
+
       {/* Hourly Forecast */}
       <section className="space-y-3">
         <h3 className="text-base font-extrabold text-agri-green-900 flex items-center space-x-2">
@@ -136,6 +162,11 @@ export default function WeatherPage() {
                   {d.tempMax}°C <span className="text-gray-400 font-medium">/ {d.tempMin}°C</span>
                 </span>
                 <p className="text-[10px] font-bold text-sky-700">Rain: {d.precipitationProb}%</p>
+                <p className="text-[10px] text-gray-500">{d.precipitation} mm · {d.windSpeed} km/h</p>
+              </div>
+              <div className="hidden md:block text-right text-[10px] text-gray-500">
+                <p>Sunrise {d.sunrise ? new Date(d.sunrise).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '--'}</p>
+                <p>Sunset {d.sunset ? new Date(d.sunset).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '--'}</p>
               </div>
             </Card>
           ))}

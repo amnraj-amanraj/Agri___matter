@@ -1,23 +1,14 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { UserProfile, Farm, FarmerCrop } from '@/types';
-import { 
-  MOCK_PROFILE, 
-  MOCK_FARM, 
-  MOCK_FARMER_CROP, 
-  supabase, 
-  isSupabaseConfigured,
-  syncUserProfile,
-  syncUserFarm 
-} from '@/lib/supabase';
+import { MOCK_PROFILE, MOCK_FARM, MOCK_FARMER_CROP } from '@/lib/mock-data';
 
 interface AuthContextType {
   user: UserProfile | null;
   farm: Farm | null;
   activeCrop: FarmerCrop | null;
   isLoggedIn: boolean;
-  isSupabaseLive: boolean;
   authReady: boolean;
   authModalOpen: boolean;
   openAuthModal: () => void;
@@ -39,241 +30,57 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<UserProfile | null>(null);
   const [farm, setFarm] = useState<Farm | null>(null);
   const [activeCrop, setActiveCropState] = useState<FarmerCrop | null>(null);
-  const [isSupabaseLive, setIsSupabaseLive] = useState(false);
   const [authReady, setAuthReady] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
 
   useEffect(() => {
-    const isLive = isSupabaseConfigured();
-    setIsSupabaseLive(isLive);
-
-    // 1. Check local storage
     const storedUser = localStorage.getItem('agrimatter_user');
     const storedFarm = localStorage.getItem('agrimatter_farm');
     const storedCrop = localStorage.getItem('agrimatter_crop');
 
     if (storedUser) {
-      try { setUser(JSON.parse(storedUser)); } catch (e) { setUser(MOCK_PROFILE); }
+      try { setUser(JSON.parse(storedUser)); } catch { setUser(null); }
     }
-
-    if (storedFarm) {
-      try { setFarm(JSON.parse(storedFarm)); } catch (e) { setFarm(MOCK_FARM); }
-    } else {
-      setFarm(MOCK_FARM);
-    }
-
-    if (storedCrop) {
-      try { setActiveCropState(JSON.parse(storedCrop)); } catch (e) { setActiveCropState(MOCK_FARMER_CROP); }
-    } else {
-      setActiveCropState(MOCK_FARMER_CROP);
-    }
-
+    try { setFarm(storedFarm ? JSON.parse(storedFarm) : MOCK_FARM); } catch { setFarm(MOCK_FARM); }
+    try { setActiveCropState(storedCrop ? JSON.parse(storedCrop) : MOCK_FARMER_CROP); } catch { setActiveCropState(MOCK_FARMER_CROP); }
     setAuthReady(true);
-
-    // 2. Attach Supabase Auth State Change Listener if configured
-    if (isLive) {
-      const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-        if (session?.user) {
-          const authUser = session.user;
-          const userProfile: UserProfile = {
-            id: authUser.id,
-            full_name: authUser.user_metadata?.full_name || authUser.email?.split('@')[0] || 'Farmer User',
-            phone: authUser.phone || authUser.user_metadata?.phone || '9876543210',
-            language: (authUser.user_metadata?.language as any) || 'hi',
-            state: authUser.user_metadata?.state || 'Punjab',
-            district: authUser.user_metadata?.district || 'Ludhiana',
-            village: authUser.user_metadata?.village || 'Samrala',
-            created_at: authUser.created_at
-          };
-          setUser(userProfile);
-          localStorage.setItem('agrimatter_user', JSON.stringify(userProfile));
-
-          // Sync to profiles table
-          await syncUserProfile(userProfile);
-        }
-      });
-
-      return () => {
-        authListener.subscription.unsubscribe();
-      };
-    }
   }, []);
 
-  // Live Supabase / Demo OTP Sender
-  const sendOtp = async (phone: string): Promise<{ success: boolean; message: string }> => {
-    const formattedPhone = phone.startsWith('+91') ? phone : `+91${phone.replace(/\D/g, '')}`;
-
-    if (isSupabaseConfigured()) {
-      try {
-        const { error } = await supabase.auth.signInWithOtp({ phone: formattedPhone });
-        if (error) throw error;
-        return { success: true, message: `OTP sent via Supabase SMS to ${formattedPhone}` };
-      } catch (err: any) {
-        console.warn("Supabase OTP attempt:", err.message);
-        return {
-          success: false,
-          message: err.message || 'Supabase SMS is not configured. Enable Phone provider and configure an SMS provider in Supabase Auth settings.'
-        };
-      }
-    }
-
-    return { success: true, message: `Demo OTP 123456 sent to +91 ${phone}` };
-  };
-
-  // Live Supabase / Demo OTP Verifier
-  const verifyOtp = async (phone: string, otp: string, name?: string): Promise<{ success: boolean; message: string }> => {
-    const formattedPhone = phone.startsWith('+91') ? phone : `+91${phone.replace(/\D/g, '')}`;
-
-    if (isSupabaseConfigured()) {
-      try {
-        const { data, error } = await supabase.auth.verifyOtp({
-          phone: formattedPhone,
-          token: otp,
-          type: 'sms'
-        });
-        if (error) throw error;
-        if (data.session?.user) {
-          const userProfile: UserProfile = {
-            id: data.session.user.id,
-            full_name: name || data.session.user.user_metadata?.full_name || 'Ramesh Kumar',
-            phone: phone.replace(/\D/g, ''),
-            language: 'hi',
-            state: 'Punjab',
-            district: 'Ludhiana',
-            village: 'Samrala'
-          };
-          setUser(userProfile);
-          localStorage.setItem('agrimatter_user', JSON.stringify(userProfile));
-          await syncUserProfile(userProfile);
-          return { success: true, message: "Supabase OTP verified successfully!" };
-        }
-      } catch (err: any) {
-        console.warn("Supabase verify notice:", err.message);
-        return {
-          success: false,
-          message: err.message || 'Supabase OTP verification failed. Check the Phone provider and SMS gateway configuration.'
-        };
-      }
-    }
-
-    // Demo Mode OTP Verification (Accepts 123456 or any 6-digit number)
-    if (otp.length === 6) {
-      const loggedInUser: UserProfile = {
-        ...MOCK_PROFILE,
-        full_name: name || MOCK_PROFILE.full_name,
-        phone: phone.replace(/\D/g, ''),
-      };
-      setUser(loggedInUser);
-      setFarm(MOCK_FARM);
-      setActiveCropState(MOCK_FARMER_CROP);
-
-      localStorage.setItem('agrimatter_user', JSON.stringify(loggedInUser));
-      localStorage.setItem('agrimatter_farm', JSON.stringify(MOCK_FARM));
-      localStorage.setItem('agrimatter_crop', JSON.stringify(MOCK_FARMER_CROP));
-
-      return { success: true, message: "OTP verified successfully!" };
-    }
-
-    return { success: false, message: "Invalid 6-digit OTP code." };
-  };
-
-  // Live Supabase Email / Password Signup
-  const signUpWithEmail = async (email: string, pass: string, name: string): Promise<{ success: boolean; message: string; requiresEmailConfirmation?: boolean }> => {
-    if (isSupabaseConfigured()) {
-      try {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password: pass,
-          options: {
-            data: { full_name: name }
-          }
-        });
-        if (error) throw error;
-
-        if (data.user && data.session) {
-          const newUser: UserProfile = {
-            id: data.user.id,
-            full_name: name,
-            phone: '9876543210',
-            language: 'hi',
-            state: 'Punjab',
-            district: 'Ludhiana',
-            village: 'Samrala'
-          };
-          setUser(newUser);
-          localStorage.setItem('agrimatter_user', JSON.stringify(newUser));
-          await syncUserProfile(newUser);
-          return { success: true, message: "Supabase account created successfully!" };
-        }
-
-        if (data.user && !data.session) {
-          return {
-            success: true,
-            requiresEmailConfirmation: true,
-            message: 'Account created. Please verify your email, then log in.'
-          };
-        }
-      } catch (err: any) {
-        return { success: false, message: err.message || "Failed to create Supabase account." };
-      }
-    }
-
-    // Fallback Local Signup
-    login(email);
-    return { success: true, message: "Account created locally!" };
-  };
-
-  // Live Supabase Email / Password Login
-  const loginWithEmail = async (email: string, pass: string): Promise<{ success: boolean; message: string }> => {
-    if (isSupabaseConfigured()) {
-      try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password: pass
-        });
-        if (error) throw error;
-
-        if (data.user) {
-          const loggedInUser: UserProfile = {
-            id: data.user.id,
-            full_name: data.user.user_metadata?.full_name || email.split('@')[0],
-            phone: data.user.phone || '9876543210',
-            language: 'hi',
-            state: 'Punjab',
-            district: 'Ludhiana',
-            village: 'Samrala'
-          };
-          setUser(loggedInUser);
-          localStorage.setItem('agrimatter_user', JSON.stringify(loggedInUser));
-          await syncUserProfile(loggedInUser);
-          return { success: true, message: "Supabase Login Successful!" };
-        }
-      } catch (err: any) {
-        return { success: false, message: err.message || "Supabase authentication failed." };
-      }
-    }
-
-    login(email);
-    return { success: true, message: "Logged in locally!" };
-  };
-
-  const login = (phoneOrEmail: string) => {
-    const loggedInUser: UserProfile = {
-      ...MOCK_PROFILE,
-      phone: phoneOrEmail.replace(/\D/g, '') || '9876543210',
-    };
-    setUser(loggedInUser);
+  const persistSession = (nextUser: UserProfile) => {
+    setUser(nextUser);
     setFarm(MOCK_FARM);
     setActiveCropState(MOCK_FARMER_CROP);
-    localStorage.setItem('agrimatter_user', JSON.stringify(loggedInUser));
+    localStorage.setItem('agrimatter_user', JSON.stringify(nextUser));
     localStorage.setItem('agrimatter_farm', JSON.stringify(MOCK_FARM));
     localStorage.setItem('agrimatter_crop', JSON.stringify(MOCK_FARMER_CROP));
   };
 
-  const logout = async () => {
-    if (isSupabaseConfigured()) {
-      try { await supabase.auth.signOut(); } catch (e) { console.warn(e); }
-    }
+  const sendOtp = async (phone: string) => ({
+    success: true,
+    message: `Demo OTP 123456 sent to +91 ${phone}`
+  });
+
+  const verifyOtp = async (phone: string, otp: string, name?: string) => {
+    if (otp.length !== 6) return { success: false, message: 'Invalid 6-digit OTP code.' };
+    persistSession({ ...MOCK_PROFILE, full_name: name || MOCK_PROFILE.full_name, phone: phone.replace(/\D/g, '') });
+    return { success: true, message: 'OTP verified successfully!' };
+  };
+
+  const login = (phoneOrEmail: string) => {
+    persistSession({ ...MOCK_PROFILE, phone: phoneOrEmail.replace(/\D/g, '') || MOCK_PROFILE.phone });
+  };
+
+  const signUpWithEmail = async (_email: string, _pass: string, name: string) => {
+    persistSession({ ...MOCK_PROFILE, full_name: name });
+    return { success: true, message: 'Account created locally!' };
+  };
+
+  const loginWithEmail = async (email: string, _pass: string) => {
+    login(email);
+    return { success: true, message: 'Logged in locally!' };
+  };
+
+  const logout = () => {
     setUser(null);
     setFarm(null);
     setActiveCropState(null);
@@ -282,29 +89,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('agrimatter_crop');
   };
 
-  const updateProfile = async (updatedProps: Partial<UserProfile>) => {
-    if (user) {
-      const updated = { ...user, ...updatedProps };
-      setUser(updated);
-      localStorage.setItem('agrimatter_user', JSON.stringify(updated));
-      await syncUserProfile(updated);
-    }
+  const updateProfile = (updatedProps: Partial<UserProfile>) => {
+    if (!user) return;
+    const updated = { ...user, ...updatedProps };
+    setUser(updated);
+    localStorage.setItem('agrimatter_user', JSON.stringify(updated));
   };
 
-  const updateFarm = async (updatedProps: Partial<Farm>) => {
-    if (farm) {
-      const updated = { ...farm, ...updatedProps };
-      setFarm(updated);
-      localStorage.setItem('agrimatter_farm', JSON.stringify(updated));
-      if (user) {
-        await syncUserFarm({
-          user_id: user.id,
-          land_size: updated.land_size,
-          irrigation_type: updated.irrigation_type,
-          soil_type: updated.soil_type
-        });
-      }
-    }
+  const updateFarm = (updatedProps: Partial<Farm>) => {
+    if (!farm) return;
+    const updated = { ...farm, ...updatedProps };
+    setFarm(updated);
+    localStorage.setItem('agrimatter_farm', JSON.stringify(updated));
   };
 
   const setActiveCrop = (crop: FarmerCrop) => {
@@ -318,7 +114,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       farm,
       activeCrop,
       isLoggedIn: !!user,
-      isSupabaseLive,
       authReady,
       authModalOpen,
       openAuthModal: () => setAuthModalOpen(true),
@@ -340,8 +135,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };
