@@ -11,6 +11,7 @@ import { Alert } from '@/components/ui/Alert';
 import { ProtectedLink } from '@/components/ProtectedLink';
 import { FAQSection } from '@/components/FAQSection';
 import { StateFarmExplorer } from '@/components/StateFarmExplorer';
+import { VoiceFeatureGuide } from '@/components/VoiceFeatureGuide';
 import { 
   Sprout, 
   CloudSun, 
@@ -204,6 +205,8 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      <VoiceFeatureGuide language={language} />
 
       {/* Mandatory Safety Alert Box */}
       <div data-gsap="alert">

@@ -122,6 +122,7 @@ export default function OnboardingPage() {
                   required
                   className="w-full p-3 rounded-xl border border-gray-300 font-bold text-sm bg-white"
                 >
+                  <option value="" disabled>Select State</option>
                   {INDIAN_STATES.map((option) => <option key={option} value={option}>{option}</option>)}
                 </select>
               </div>
@@ -134,6 +135,7 @@ export default function OnboardingPage() {
                   disabled={!districts.length}
                   className="w-full p-3 rounded-xl border border-gray-300 font-bold text-sm bg-white disabled:bg-gray-100"
                 >
+                  <option value="" disabled>Select District</option>
                   {districts.map((option) => <option key={option} value={option}>{option}</option>)}
                 </select>
               </div>
