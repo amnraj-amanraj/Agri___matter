@@ -3,6 +3,7 @@
 import { FormEvent, useState } from 'react';
 import { AlertCircle, ArrowUpDown, CalendarDays, MapPin, Search, Store } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
+import { getDistrictsForState, INDIAN_STATES } from '@/data/indiaLocations';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 
@@ -21,6 +22,7 @@ export default function MandiPage() {
   const [message, setMessage] = useState('');
   const [source, setSource] = useState<ApiPayload['source']>();
   const [fetchedAt, setFetchedAt] = useState('');
+  const districts = getDistrictsForState(state);
 
   async function searchPrices(event?: FormEvent) {
     event?.preventDefault();
@@ -67,8 +69,8 @@ export default function MandiPage() {
 
       <Card className="border-emerald-200 bg-gradient-to-br from-emerald-50/80 via-white to-amber-50/50 p-5">
         <form onSubmit={searchPrices} className="grid gap-4 md:grid-cols-[1fr_1fr_1fr_auto] md:items-end">
-          <label className="text-xs font-black text-agri-green-900">{copy.state}<input value={state} onChange={(event) => setState(event.target.value)} placeholder={copy.statePlaceholder} className="mt-1.5 w-full rounded-xl border border-emerald-200 bg-white p-3 text-sm font-semibold outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100" /></label>
-          <label className="text-xs font-black text-agri-green-900">{copy.district}<input value={district} onChange={(event) => setDistrict(event.target.value)} placeholder={copy.districtPlaceholder} className="mt-1.5 w-full rounded-xl border border-emerald-200 bg-white p-3 text-sm font-semibold outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100" /></label>
+          <label className="text-xs font-black text-agri-green-900">{copy.state}<select value={state} onChange={(event) => { setState(event.target.value); setDistrict(''); }} className="mt-1.5 w-full rounded-xl border border-emerald-200 bg-white p-3 text-sm font-semibold outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"><option value="">{copy.statePlaceholder}</option>{INDIAN_STATES.map((option) => <option key={option} value={option}>{option}</option>)}</select></label>
+          <label className="text-xs font-black text-agri-green-900">{copy.district}<select value={district} onChange={(event) => setDistrict(event.target.value)} disabled={!state} className="mt-1.5 w-full rounded-xl border border-emerald-200 bg-white p-3 text-sm font-semibold outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 disabled:cursor-not-allowed disabled:bg-gray-100"><option value="">{state ? copy.districtPlaceholder : 'Select a state first'}</option>{districts.map((option) => <option key={option} value={option}>{option}</option>)}</select></label>
           <label className="text-xs font-black text-agri-green-900">{copy.crop}<input value={commodity} onChange={(event) => setCommodity(event.target.value)} placeholder={copy.cropPlaceholder} className="mt-1.5 w-full rounded-xl border border-emerald-200 bg-white p-3 text-sm font-semibold outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100" /></label>
           <Button type="submit" disabled={status === 'loading'}><Search className="mr-2 h-4 w-4" />{status === 'loading' ? copy.searching : copy.findPrices}</Button>
         </form>

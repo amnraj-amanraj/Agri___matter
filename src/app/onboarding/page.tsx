@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
+import { getDistrictsForState, INDIAN_STATES } from '@/data/indiaLocations';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Sprout, MapPin, Droplets, Layers, Calendar, CheckCircle2, ArrowRight } from 'lucide-react';
@@ -27,6 +28,7 @@ export default function OnboardingPage() {
   
   const [cropName, setCropName] = useState(activeCrop?.crop_name || 'Wheat');
   const [cropStage, setCropStage] = useState(activeCrop?.crop_stage || 'Vegetative');
+  const districts = getDistrictsForState(state);
 
   const handleFinish = () => {
     setLanguage(lang);
@@ -110,21 +112,30 @@ export default function OnboardingPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-extrabold text-agri-green-900 mb-1">{t.onboarding.state}</label>
-                <input
-                  type="text"
+                <select
                   value={state}
-                  onChange={(e) => setState(e.target.value)}
-                  className="w-full p-3 rounded-xl border border-gray-300 font-bold text-sm"
-                />
+                  onChange={(e) => {
+                    const nextState = e.target.value;
+                    setState(nextState);
+                    setDistrict(getDistrictsForState(nextState)[0] || '');
+                  }}
+                  required
+                  className="w-full p-3 rounded-xl border border-gray-300 font-bold text-sm bg-white"
+                >
+                  {INDIAN_STATES.map((option) => <option key={option} value={option}>{option}</option>)}
+                </select>
               </div>
               <div>
                 <label className="block text-xs font-extrabold text-agri-green-900 mb-1">{t.onboarding.district}</label>
-                <input
-                  type="text"
+                <select
                   value={district}
                   onChange={(e) => setDistrict(e.target.value)}
-                  className="w-full p-3 rounded-xl border border-gray-300 font-bold text-sm"
-                />
+                  required
+                  disabled={!districts.length}
+                  className="w-full p-3 rounded-xl border border-gray-300 font-bold text-sm bg-white disabled:bg-gray-100"
+                >
+                  {districts.map((option) => <option key={option} value={option}>{option}</option>)}
+                </select>
               </div>
             </div>
 
